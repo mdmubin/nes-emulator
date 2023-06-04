@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.15)
+
+# project settings
+project(nes_emu LANGUAGES CXX)
+
+# c/c++ standards
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+
+# sources
+set(
+    project_source_files
+    # source files go here
+    "${CMAKE_SOURCE_DIR}/source/main.cpp"
+)
+
+# executable
+add_executable(${PROJECT_NAME} ${project_source_files})
+
+# include directory
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/include/")
