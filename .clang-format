@@ -10,10 +10,11 @@ AccessModifierOffset: -4
 
 PPIndentWidth: 2
 IncludeBlocks: Regroup
-SortIncludes: false
+SortIncludes: Never
 IndentPPDirectives: BeforeHash
 AlignConsecutiveMacros: Consecutive
 AlwaysBreakTemplateDeclarations: Yes
+AllowShortFunctionsOnASingleLine: Empty
 
 SpaceAfterCStyleCast: true
 AlignArrayOfStructures: Right

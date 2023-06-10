@@ -41,3 +41,6 @@ bin/
 
 # build directories
 build/
+
+# CLion directories
+.idea/
