@@ -12,6 +12,7 @@ set(
     project_source_files
     # source files go here
     "${CMAKE_SOURCE_DIR}/source/main.cpp"
+    "${CMAKE_SOURCE_DIR}/source/nes/cpu.cpp"
 )
 
 # executable

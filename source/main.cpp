@@ -1,6 +1,6 @@
-#include <iostream>
+#include "nes/cpu/cpu.hpp"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+    nes::Cpu cpu;
+    cpu.interpret({0xa9, 0xC2, 0xaa, 0xe8, 0x00});
 }
