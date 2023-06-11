@@ -2,6 +2,7 @@
 
 #include "common/types.hpp"
 #include "common/utils.hpp"
+#include "nes/memory.hpp"
 
 #include <vector>
 
@@ -11,31 +12,31 @@ namespace nes {
 class Cpu {
 public:
     /// Create a new Cpu, with all values set to default values
-    Cpu() = default;
+    Cpu();
 
-    /// Interpret the program / memory slice
-    /// @param program An array of instructions from memory
-    void interpret(const std::vector<u8> &program);
+    /// Interpret the program / memory slice, and run the emulator
+    void load_and_run(const std::vector<u8> &program);
 
+    void reset();
 
 private:
     /// Accumulator Register, A
-    u8 A = 0;
+    u8 A;
 
     /// Index Register, X
-    u8 X = 0;
+    u8 X;
 
     /// Index Register, Y
-    u8 Y = 0;
+    u8 Y;
 
     /// Processor Status Register, P
-    u8 P = 0;
+    u8 P;
 
     /// Stack Pointer, SP
-    u8 SP = 0;
+    u8 SP;
 
     /// Program Counter, PC
-    u16 PC = 0;
+    u16 PC;
 
     /// Memory
     Memory memory;

@@ -10,11 +10,36 @@ using namespace nes;
 using namespace std;
 
 
-void Cpu::interpret(const vector<u8> &program) {
+Cpu::Cpu() {
+    reset();
+}
+
+void Cpu::load_and_run(const vector<u8> &program) {
+    load_program(program);
+    reset();
+    run();
+}
+
+void Cpu::reset() {
+    A  = 0;
+    X  = 0;
+    Y  = 0;
+    P  = 0;
+    SP = 0;
+    PC = memory.read_u16(0xFFFC);
+    memory.reset();
+}
+
+void Cpu::load_program(const vector<u8> &program) {
+    memory.load_program(program);
+    memory.write_u16(0x8000, 0xFFFC);
+}
+
+void Cpu::run() {
     bool interrupt = false;
 
     while (!interrupt) {
-        u8 opcode = program[PC++];
+        u8 opcode = memory.read_u8(PC++);
 
         switch (opcode) {
         case Opcode::BRK: {
@@ -23,7 +48,7 @@ void Cpu::interpret(const vector<u8> &program) {
         }
 
         case Opcode::LDA: {
-            A = program[PC++];
+            A = memory.read_u8(PC++);
             set_zero(A == 0);
             set_negative(A & 0x80);
             break;
