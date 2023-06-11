@@ -1,8 +1,10 @@
 #include "nes/cpu/cpu.hpp"
 #include "nes/cpu/opcodes.hpp"
 
-#include <iostream>
-#include <string>
+#ifndef NDEBUG
+  #include <iostream>
+  #include <string>
+#endif
 
 using namespace nes;
 using namespace std;
@@ -42,10 +44,12 @@ void Cpu::interpret(const vector<u8> &program) {
 #ifndef NDEBUG
         // debug status registers
         cout << std::hex
-             << "P: "  << to_string(P)  << ", "
-             << "X: "  << to_string(X)  << ", "
-             << "A: "  << to_string(A)  << ", "
-             << "PC: " << to_string(PC) << ", "
+             << "A: "  << (int) A  << ", "
+             << "X: "  << (int) X  << ", "
+             << "Y: "  << (int) Y  << ", "
+             << "P: "  << (int) P  << ", "
+             << "SP: " << (int) SP << ", "
+             << "PC: " << (int) PC << ", "
              << "\n";
 #endif
     }
