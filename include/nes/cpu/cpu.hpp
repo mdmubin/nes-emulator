@@ -8,39 +8,43 @@
 
 namespace nes {
 
+// Forward declaration of bus class
+class Bus;
+
 /// The main Cpu abstraction for emulating the NES
 class Cpu {
 public:
     /// Create a new Cpu, with all values set to default values
-    Cpu();
+    Cpu() = default;
 
     /// Interpret the program / memory slice, and run the emulator
     void load_and_run(const std::vector<u8> &program);
+
+    void connect_bus(Bus *bus);
 
     void reset();
 
 private:
     /// Accumulator Register, A
-    u8 A;
+    u8 A = 0;
 
     /// Index Register, X
-    u8 X;
+    u8 X = 0;
 
     /// Index Register, Y
-    u8 Y;
+    u8 Y = 0;
 
     /// Processor Status Register, P
-    u8 P;
+    u8 P = 0;
 
     /// Stack Pointer, SP
-    u8 SP;
+    u8 SP = 0;
 
     /// Program Counter, PC
-    u16 PC;
+    u16 PC = 0;
 
-    /// Memory
-    Memory memory;
-
+    /// The bus
+    Bus *bus;
 
 private:
     /// Index of each status flag in the status register, P

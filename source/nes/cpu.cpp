@@ -1,4 +1,5 @@
 #include "nes/cpu/cpu.hpp"
+#include "nes/bus.hpp"
 #include "nes/cpu/opcodes.hpp"
 
 #ifndef NDEBUG
@@ -8,11 +9,6 @@
 
 using namespace nes;
 using namespace std;
-
-
-Cpu::Cpu() {
-    reset();
-}
 
 void Cpu::load_and_run(const vector<u8> &program) {
     load_program(program);
@@ -26,20 +22,23 @@ void Cpu::reset() {
     Y  = 0;
     P  = 0;
     SP = 0;
-    PC = memory.read_u16(0xFFFC);
-    memory.reset();
+    PC = bus->read_u16(0xFFFC);
+}
+
+void Cpu::connect_bus(Bus *b) {
+    bus = b;
 }
 
 void Cpu::load_program(const vector<u8> &program) {
-    memory.load_program(program);
-    memory.write_u16(0x8000, 0xFFFC);
+    bus->mem.load_program(program);
+    bus->write_u16(0x8000, 0xFFFC);
 }
 
 void Cpu::run() {
     bool interrupt = false;
 
     while (!interrupt) {
-        u8 opcode = memory.read_u8(PC++);
+        u8 opcode = bus->read_u8(PC++);
 
         switch (opcode) {
         case Opcode::BRK: {
@@ -48,7 +47,7 @@ void Cpu::run() {
         }
 
         case Opcode::LDA: {
-            A = memory.read_u8(PC++);
+            A = bus->read_u8(PC++);
             set_zero(A == 0);
             set_negative(A & 0x80);
             break;

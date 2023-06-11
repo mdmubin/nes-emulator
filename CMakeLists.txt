@@ -14,6 +14,7 @@ set(
     "${CMAKE_SOURCE_DIR}/source/main.cpp"
     "${CMAKE_SOURCE_DIR}/source/nes/cpu.cpp"
     "${CMAKE_SOURCE_DIR}/source/nes/memory.cpp"
+    "${CMAKE_SOURCE_DIR}/source/nes/bus.cpp"
 )
 
 # executable

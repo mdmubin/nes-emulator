@@ -1,6 +1,6 @@
-#include "nes/cpu/cpu.hpp"
+#include "nes/bus.hpp"
 
 int main() {
-    nes::Cpu cpu;
-    cpu.load_and_run({0xa9, 0xc2, 0xaa, 0xe8, 0x00});
+    nes::Bus bus;
+    bus.cpu.load_and_run({0xa9, 0xc2, 0xaa, 0xe8, 0x00});
 }
