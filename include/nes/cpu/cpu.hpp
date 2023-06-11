@@ -54,45 +54,37 @@ private:
 
 
     /// Modify the status register. Set the carry flag to the value of status
-    void set_carry(bool status) {
-        set_bit_value(P, Status::C, status);
-    }
+    void set_carry(bool status);
 
     /// Modify the status register. Set the zero flag to the value of status
-    void set_zero(bool status) {
-        set_bit_value(P, Status::Z, status);
-    }
+    void set_zero(bool status);
 
     /// Modify the status register. Set the interrupt disable flag to the value of status
-    void set_interrupt_disabled(bool status) {
-        set_bit_value(P, Status::I, status);
-    }
+    void set_interrupt_disabled(bool status);
 
     /// Modify the status register. Set the decimal mode operations flag to the value of status
     /// NOTE: probably will remain unused in our implementation
-    void set_decimal_mode(bool status) {
-        set_bit_value(P, Status::D, status);
-    }
+    void set_decimal_mode(bool status);
 
     /// Modify the status register. Set the break flag to the value of status
-    void set_break(bool status) {
-        set_bit_value(P, Status::B, status);
-    }
+    void set_break(bool status);
 
     /// Modify the status register. Set the overflow flag to the value of status
-    void set_overflow(bool status) {
-        set_bit_value(P, Status::V, status);
-    }
+    void set_overflow(bool status);
 
     /// Modify the status register. Set the negative flag to the value of status
-    void set_negative(bool status) {
-        set_bit_value(P, Status::N, status);
-    }
+    void set_negative(bool status);
 
     /// Get the value of a status flag, in the status register, P
-    bool get_status(Status status) const {
-        return get_bit_value(P, status);
-    }
+    bool get_status(Status status) const;
+
+
+private:
+    /// copy the program values into the memory
+    void load_program(const std::vector<u8> &program);
+
+    /// emulation loop
+    void run();
 };
 
 } // namespace nes

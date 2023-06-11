@@ -50,3 +50,36 @@ void Cpu::interpret(const vector<u8> &program) {
 #endif
     }
 }
+
+
+void Cpu::set_carry(bool status) {
+    set_bit_value(P, Status::C, status);
+}
+
+void Cpu::set_zero(bool status) {
+    set_bit_value(P, Status::Z, status);
+}
+
+void Cpu::set_interrupt_disabled(bool status) {
+    set_bit_value(P, Status::I, status);
+}
+
+void Cpu::set_decimal_mode(bool status) {
+    set_bit_value(P, Status::D, status);
+}
+
+void Cpu::set_break(bool status) {
+    set_bit_value(P, Status::B, status);
+}
+
+void Cpu::set_overflow(bool status) {
+    set_bit_value(P, Status::V, status);
+}
+
+void Cpu::set_negative(bool status) {
+    set_bit_value(P, Status::N, status);
+}
+
+bool Cpu::get_status(Cpu::Status status) const {
+    return get_bit_value(P, status);
+}
