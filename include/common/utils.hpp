@@ -40,7 +40,7 @@ inline void set_bit_value(u8 &num, int n, bool value) {
 /// Get the value of the nth bit in the number num
 /// @param num the number
 /// @param n the index of the bit
-inline bool get_bit_value(const u8 &num, int n) {
+inline bool get_bit_value(u8 num, int n) {
     return (num & (1 << n)) != 0;
 }
 
