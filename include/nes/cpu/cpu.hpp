@@ -38,6 +38,8 @@ private:
     u16 PC = 0;
 
     /// Memory
+    Memory memory;
+
 
 private:
     /// Index of each status flag in the status register, P

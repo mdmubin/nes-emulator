@@ -13,6 +13,7 @@ set(
     # source files go here
     "${CMAKE_SOURCE_DIR}/source/main.cpp"
     "${CMAKE_SOURCE_DIR}/source/nes/cpu.cpp"
+    "${CMAKE_SOURCE_DIR}/source/nes/memory.cpp"
 )
 
 # executable
