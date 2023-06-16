@@ -88,6 +88,7 @@ private:
 
 private:
     /// copy the program values into the memory
+    /// TODO: remove this bit, we don't want to load programs directly onto our CPU
     void load_program(const std::vector<u8> &program);
 
     /// emulation loop

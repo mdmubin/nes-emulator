@@ -1,7 +1,7 @@
 #pragma once
 
 #include "common/types.hpp"
-#include "nes/cpu/cpu.hpp"
+#include "nes/cpu.hpp"
 #include "nes/memory.hpp"
 
 #include <array>

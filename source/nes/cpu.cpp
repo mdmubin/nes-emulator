@@ -1,6 +1,6 @@
-#include "nes/cpu/cpu.hpp"
+#include "nes/cpu.hpp"
 #include "nes/bus.hpp"
-#include "nes/cpu/opcodes.hpp"
+#include "nes/instructions.hpp"
 
 #ifndef NDEBUG
   #include <iostream>
