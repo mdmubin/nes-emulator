@@ -2,6 +2,7 @@
 
 #include "common/types.hpp"
 #include "common/utils.hpp"
+#include "nes/instructions.hpp"
 #include "nes/memory.hpp"
 
 #include <vector>
@@ -55,12 +56,11 @@ private:
     bool get_status(StatusFlag status) const;
 
 private:
-    /// copy the program values into the memory
-    /// TODO: remove this bit, we don't want to load programs directly onto our CPU
-    void load_program(const std::vector<u8> &program);
+    Instruction const *currentInstruction;
 
-    /// emulation loop
-    void run();
+    void execute();
+
+    u16 get_address(AddressingMode mode);
 };
 
 } // namespace nes
