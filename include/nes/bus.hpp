@@ -8,7 +8,6 @@
 
 namespace nes {
 
-
 class Bus {
 public:
     Bus();

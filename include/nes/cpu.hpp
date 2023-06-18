@@ -17,74 +17,42 @@ public:
     /// Create a new Cpu, with all values set to default values
     Cpu() = default;
 
-    /// Interpret the program / memory slice, and run the emulator
-    void load_and_run(const std::vector<u8> &program);
-
+    /// Enable bus communication with this CPU
     void connect_bus(Bus *bus);
 
+    /// reset the current CPU to a known state
     void reset();
 
 private:
-    /// Accumulator Register, A
-    u8 A = 0;
+    u8  A  = 0; // Accumulator Register, A
+    u8  X  = 0; // Index Register, X
+    u8  Y  = 0; // Index Register, Y
+    u8  P  = 0; // Processor Status Register, P
+    u8  SP = 0; // Stack Pointer, SP
+    u16 PC = 0; // Program Counter, PC
 
-    /// Index Register, X
-    u8 X = 0;
+    Bus *bus = nullptr; // The bus
 
-    /// Index Register, Y
-    u8 Y = 0;
-
-    /// Processor Status Register, P
-    u8 P = 0;
-
-    /// Stack Pointer, SP
-    u8 SP = 0;
-
-    /// Program Counter, PC
-    u16 PC = 0;
-
-    /// The bus
-    Bus *bus;
+    u8 cyclesRemaining = 0;
 
 private:
     /// Index of each status flag in the status register, P
-    enum Status {
+    enum StatusFlag {
         C = 0, // Carry
         Z = 1, // Zero
         I = 2, // Disable Interrupts
         D = 3, // Decimal Mode (unused)
         B = 4, // Break
-        _ = 5, // Unused
+        U = 5, // Unused
         V = 6, // Overflow
         N = 7, // Negative
     };
 
-
-    /// Modify the status register. Set the carry flag to the value of status
-    void set_carry(bool status);
-
-    /// Modify the status register. Set the zero flag to the value of status
-    void set_zero(bool status);
-
-    /// Modify the status register. Set the interrupt disable flag to the value of status
-    void set_interrupt_disabled(bool status);
-
-    /// Modify the status register. Set the decimal mode operations flag to the value of status
-    /// NOTE: probably will remain unused in our implementation
-    void set_decimal_mode(bool status);
-
-    /// Modify the status register. Set the break flag to the value of status
-    void set_break(bool status);
-
-    /// Modify the status register. Set the overflow flag to the value of status
-    void set_overflow(bool status);
-
-    /// Modify the status register. Set the negative flag to the value of status
-    void set_negative(bool status);
+    /// Modify the status register. Set a flag in the status register to the given value
+    void set_status(StatusFlag flag, bool status);
 
     /// Get the value of a status flag, in the status register, P
-    bool get_status(Status status) const;
-
+    bool get_status(StatusFlag status) const;
 
 private:
     /// copy the program values into the memory
