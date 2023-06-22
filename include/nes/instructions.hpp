@@ -5,62 +5,62 @@ namespace nes {
 /// Operation / Instruction types for the CPU
 enum OperationType {
     // legal instructions
-    op_ADC,
-    op_AND,
-    op_ASL,
-    op_BCC,
-    op_BCS,
-    op_BEQ,
-    op_BIT,
-    op_BMI,
-    op_BNE,
-    op_BPL,
-    op_BRK,
-    op_BVC,
-    op_BVS,
-    op_CLC,
-    op_CLD,
-    op_CLI,
-    op_CLV,
-    op_CMP,
-    op_CPX,
-    op_CPY,
-    op_DEC,
-    op_DEX,
-    op_DEY,
-    op_EOR,
-    op_INC,
-    op_INX,
-    op_INY,
-    op_JMP,
-    op_JSR,
-    op_LDA,
-    op_LDX,
-    op_LDY,
-    op_LSR,
-    op_NOP,
-    op_ORA,
-    op_PHA,
-    op_PHP,
-    op_PLA,
-    op_PLP,
-    op_ROL,
-    op_ROR,
-    op_RTI,
-    op_RTS,
-    op_SBC,
-    op_SEC,
-    op_SED,
-    op_SEI,
-    op_STA,
-    op_STX,
-    op_STY,
-    op_TAX,
-    op_TAY,
-    op_TSX,
-    op_TXA,
-    op_TXS,
-    op_TYA,
+    op_ADC, // addition with carry
+    op_AND, // logical AND
+    op_ASL, // arithmetic shift left
+    op_BCC, // branch on carry clear
+    op_BCS, // branch on carry set
+    op_BEQ, // branch on equal
+    op_BIT, // bit test
+    op_BMI, // branch on negative
+    op_BNE, // branch on not equal
+    op_BPL, // branch on positive
+    op_BRK, // force interrupt
+    op_BVC, // branch on overflow clear
+    op_BVS, // branch on overflow set
+    op_CLC, // clear carry
+    op_CLD, // clear decimal mode
+    op_CLI, // clear interrupt disable
+    op_CLV, // clear overflow
+    op_CMP, // compare with A
+    op_CPX, // compare with X
+    op_CPY, // compare with Y
+    op_DEC, // decrement value at memory
+    op_DEX, // decrement value at X
+    op_DEY, // decrement value at Y
+    op_EOR, // exclusive OR with A
+    op_INC, // increment value at memory
+    op_INX, // increment value at X
+    op_INY, // increment value at Y
+    op_JMP, // jump to address
+    op_JSR, // jump to subroutine
+    op_LDA, // load to A
+    op_LDX, // load to X
+    op_LDY, // load to Y
+    op_LSR, // logical shift right
+    op_NOP, // no operation
+    op_ORA, // logical OR with A
+    op_PHA, // push A to stack
+    op_PHP, // push P to stack
+    op_PLA, // pull A from stack
+    op_PLP, // pull P from stack
+    op_ROL, // rotate left
+    op_ROR, // rotate right
+    op_RTI, // return from interrupt
+    op_RTS, // return from subroutine
+    op_SBC, // subtraction with carry
+    op_SEC, // set carry
+    op_SED, // set decimal mode
+    op_SEI, // set interrupt disable
+    op_STA, // store A to memory
+    op_STX, // store X to memory
+    op_STY, // store Y to memory
+    op_TAX, // transfer A to X
+    op_TAY, // transfer A to Y
+    op_TSX, // transfer SP to X
+    op_TXA, // transfer X to A
+    op_TXS, // transfer X to SP
+    op_TYA, // transfer Y to A
 
     op_XXX, // unknown op
 };
