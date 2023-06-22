@@ -20,7 +20,7 @@ public:
 
     void write_u16(u16 data, u16 address);
 
-//private:
+private:
     Memory mem;
 
     Cpu cpu;

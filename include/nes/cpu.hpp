@@ -1,7 +1,6 @@
 #pragma once
 
 #include "common/types.hpp"
-#include "common/utils.hpp"
 #include "nes/instructions.hpp"
 #include "nes/memory.hpp"
 
@@ -24,6 +23,9 @@ public:
     /// reset the current CPU to a known state
     void reset();
 
+    /// request interrupt (can be disabled by setting disable interrupt bit)
+    void irq();
+
 private:
     u8  A  = 0; // Accumulator Register, A
     u8  X  = 0; // Index Register, X
@@ -32,35 +34,43 @@ private:
     u8  SP = 0; // Stack Pointer, SP
     u16 PC = 0; // Program Counter, PC
 
-    Bus *bus = nullptr; // The bus
+    Bus *bus = nullptr;
 
     u8 cyclesRemaining = 0;
 
 private:
     /// Index of each status flag in the status register, P
     enum StatusFlag {
-        C = 0, // Carry
-        Z = 1, // Zero
-        I = 2, // Disable Interrupts
-        D = 3, // Decimal Mode (unused)
-        B = 4, // Break
-        U = 5, // Unused
-        V = 6, // Overflow
-        N = 7, // Negative
+        C = 1 << 0, // Carry
+        Z = 1 << 1, // Zero
+        I = 1 << 2, // Disable Interrupts
+        D = 1 << 3, // Decimal Mode (unused)
+        B = 1 << 4, // Break
+        U = 1 << 5, // Unused
+        V = 1 << 6, // Overflow
+        N = 1 << 7, // Negative
     };
 
-    /// Modify the status register. Set a flag in the status register to the given value
-    void set_status(StatusFlag flag, bool status);
+    void set_C_status(bool status);
+    void set_Z_status(bool status);
+    void set_I_status(bool status);
+    void set_D_status(bool status);
+    void set_B_status(bool status);
+    void set_V_status(bool status);
+    void set_N_status(bool status);
 
-    /// Get the value of a status flag, in the status register, P
-    bool get_status(StatusFlag status) const;
+    void set_ZN_status(u8 num);
 
 private:
-    Instruction const *currentInstruction;
+    void decode_instruction();
 
-    void execute();
+    u16 get_operand_address(AddressingMode mode);
 
-    u16 get_address(AddressingMode mode);
+    void execute_instruction(const Instruction *instruction, u16 operandAddr);
+
+    void branch_to(u16 address);
+
+    void handle_page_break(u16 a1, u16 a2);
 };
 
 } // namespace nes
