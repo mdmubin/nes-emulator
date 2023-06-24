@@ -26,6 +26,9 @@ public:
     /// request interrupt (can be disabled by setting disable interrupt bit)
     void irq();
 
+    /// non-maskable interrupt
+    void nmi();
+
 private:
     u8  A  = 0; // Accumulator Register, A
     u8  X  = 0; // Index Register, X

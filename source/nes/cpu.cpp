@@ -22,9 +22,11 @@ void Cpu::reset() {
     A  = 0;
     X  = 0;
     Y  = 0;
-    P  = 0x34;
+    P  = 0 | I; // interrupt disabled
     SP = 0xFD;
     PC = bus->read_u16(0xFFFC);
+
+    cyclesRemaining = 8;
 }
 
 void Cpu::irq() {
@@ -33,7 +35,34 @@ void Cpu::irq() {
         SP -= 1;
         bus->write_u8(PC & 0xFF, STACK_START + SP);
         SP -= 1;
+
+        set_B_status(false);
+        bus->write_u8(P, STACK_START + SP);
+        SP -= 1;
+
+        set_I_status(true);
+
+        PC = bus->read_u16(0xFFFE);
+
+        cyclesRemaining = 7;
     }
+}
+
+void Cpu::nmi() {
+    bus->write_u8(PC >> 8, STACK_START + SP);
+    SP -= 1;
+    bus->write_u8(PC & 0xFF, STACK_START + SP);
+    SP -= 1;
+
+    set_B_status(false);
+    bus->write_u8(P, STACK_START + SP);
+    SP -= 1;
+
+    set_I_status(true);
+
+    PC = bus->read_u16(0xFFFA);
+
+    cyclesRemaining += 7;
 }
 
 //
