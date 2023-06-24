@@ -34,9 +34,13 @@ private:
     u8  SP = 0; // Stack Pointer, SP
     u16 PC = 0; // Program Counter, PC
 
-    Bus *bus = nullptr;
+    Bus *bus = nullptr; // the bus, interface for communication
 
-    u8 cyclesRemaining = 0;
+    const Instruction *instruction = nullptr; // currently executing instruction
+
+    u8 cyclesRemaining = 0; // remaining number of cycles to simulate
+
+    u64 cyclesExecuted = 0; // total number of cycles simulated
 
 private:
     /// Index of each status flag in the status register, P
@@ -51,6 +55,8 @@ private:
         N = 1 << 7, // Negative
     };
 
+    // status register modifiers
+
     void set_C_status(bool status);
     void set_Z_status(bool status);
     void set_I_status(bool status);
@@ -59,14 +65,16 @@ private:
     void set_V_status(bool status);
     void set_N_status(bool status);
 
+    /// set the zero and negative bits in the status register based on the value of num
     void set_ZN_status(u8 num);
 
 private:
+    /// fetch instruction from memory and decode it
     void decode_instruction();
 
     u16 get_operand_address(AddressingMode mode);
 
-    void execute_instruction(const Instruction *instruction, u16 operandAddr);
+    void execute_instruction(u16 operandAddr);
 
     void branch_to(u16 address);
 

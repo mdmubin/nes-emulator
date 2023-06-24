@@ -11,7 +11,6 @@ using namespace nes;
 //
 
 #define STACK_START 0x0100
-#define IRQ_ADDRESS 0xFFFE
 
 //
 
@@ -43,13 +42,13 @@ void Cpu::decode_instruction() {
     auto opcode = bus->read_u8(PC);
     PC += 1;
 
-    auto instruction = &INSTRUCTION_LOOKUP[opcode];
+    instruction = &INSTRUCTION_LOOKUP[opcode];
     auto operandAddr = get_operand_address(instruction->mode);
 
-    execute_instruction(instruction, operandAddr);
+    execute_instruction(operandAddr);
 }
 
-void Cpu::execute_instruction(const Instruction *instruction, u16 addr) {
+void Cpu::execute_instruction(u16 addr) {
     switch (instruction->op) {
     case op_ADC: {
         u8 M = bus->read_u8(addr);
@@ -143,7 +142,7 @@ void Cpu::execute_instruction(const Instruction *instruction, u16 addr) {
         bus->write_u8(P | B, STACK_START + SP);
         SP -= 1;
 
-        PC = bus->read_u16(IRQ_ADDRESS); // load interrupt vector
+        PC = bus->read_u16(0xFFFE); // load interrupt vector
 
         set_B_status(false);
         break;
@@ -445,7 +444,14 @@ u16 Cpu::get_operand_address(AddressingMode mode) {
     case am_ABX: {
         address = bus->read_u16(PC);
 
-        handle_page_break(address, address + X);
+        switch (instruction->op) {
+        case op_ASL: case op_DEC: case op_INC: case op_LSR: case op_ROL: case op_ROR: case op_STA:
+            // no change occurs to cycle times
+            break;
+        default:
+            handle_page_break(address, address + X);
+            break;
+        }
 
         address += X;
         PC += 2;
@@ -454,7 +460,14 @@ u16 Cpu::get_operand_address(AddressingMode mode) {
     case am_ABY: {
         address = bus->read_u16(PC);
 
-        handle_page_break(address, address + Y);
+        switch (instruction->op) {
+        case op_STA:
+            // no change occurs to cycle times
+            break;
+        default:
+            handle_page_break(address, address + X);
+            break;
+        }
 
         address += Y;
         PC += 2;
@@ -499,7 +512,14 @@ u16 Cpu::get_operand_address(AddressingMode mode) {
 
         address = (hi << 8) | lo;
 
-        handle_page_break(address, address + Y);
+        switch (instruction->op) {
+        case op_STA:
+            // no change occurs to cycle times
+            break;
+        default:
+            handle_page_break(address, address + X);
+            break;
+        }
 
         address += Y;
         PC += 1;
@@ -578,5 +598,8 @@ void Cpu::branch_to(u16 address) {
 }
 
 void Cpu::handle_page_break(u16 a1, u16 a2) {
-    // TODO handle cycle time change on encountering page break
+    // if two addresses have different hi-bytes, they are in different pages, i.e. page break.
+    if ((a1 & 0xFF00) != (a2 & 0xFF00)) {
+        cyclesRemaining++;
+    }
 }
