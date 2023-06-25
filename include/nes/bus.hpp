@@ -10,7 +10,7 @@ namespace nes {
 
 class Bus {
 public:
-    Bus();
+    Bus() = default;
 
     u8 read_u8(u16 address);
 
@@ -20,10 +20,10 @@ public:
 
     void write_u16(u16 data, u16 address);
 
-private:
-    Memory mem;
+    void attach_components(Cpu* cpu, Mem *m);
 
-    Cpu cpu;
+private:
+    Mem * mem;
 };
 
 } // namespace nes

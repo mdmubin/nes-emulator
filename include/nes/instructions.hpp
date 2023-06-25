@@ -84,6 +84,7 @@ enum AddressingMode {
 struct Instruction {
     OperationType op;
     AddressingMode mode;
+    u16 address;
 };
 
 static const Instruction INSTRUCTION_LOOKUP[256] = {
@@ -127,6 +128,5 @@ static const u64 CYCLE_COUNT_LOOKUP[256] = {
     /* 0xE */   2,   6,   0,   0,   3,   3,   5,   0,   2,   2,   2,   2,   4,   4,   6,   0,
     /* 0xF */   2,   5,   0,   0,   0,   4,   6,   0,   2,   4,   0,   0,   0,   4,   7,   0,
 };
-
 
 } // namespace nes

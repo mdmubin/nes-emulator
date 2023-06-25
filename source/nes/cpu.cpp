@@ -1,10 +1,9 @@
 #include "nes/cpu.hpp"
 #include "nes/bus.hpp"
 
-#ifndef NDEBUG
-  #include <iostream>
-  #include <string>
-#endif
+#include <iostream>
+#include <sstream>
+#include <fmt/core.h>
 
 using namespace nes;
 
@@ -67,18 +66,22 @@ void Cpu::nmi() {
 
 //
 
-void Cpu::decode_instruction() {
+void Cpu::clock() {
     auto opcode = bus->read_u8(PC);
     PC += 1;
 
-    instruction = &INSTRUCTION_LOOKUP[opcode];
-    auto operandAddr = get_operand_address(instruction->mode);
+    instruction         = INSTRUCTION_LOOKUP[opcode];
+    cyclesRemaining     = CYCLE_COUNT_LOOKUP[opcode];
+    instruction.address = get_operand_address();
 
-    execute_instruction(operandAddr);
+    execute_instruction();
 }
 
-void Cpu::execute_instruction(u16 addr) {
-    switch (instruction->op) {
+//
+
+void Cpu::execute_instruction() {
+    auto addr = instruction.address;
+    switch (instruction.op) {
     case op_ADC: {
         u8 M = bus->read_u8(addr);
 
@@ -97,13 +100,13 @@ void Cpu::execute_instruction(u16 addr) {
         break;
     }
     case op_ASL: {
-        u16 M = instruction->mode == am_IMP ? A : bus->read_u8(addr);
+        u16 M = instruction.mode == am_IMP ? A : bus->read_u8(addr);
 
         M <<= 1;
         set_C_status((M & 0xFF00) != 0);
         set_ZN_status(M & 0x00FF);
 
-        if (instruction->mode == am_IMP) {
+        if (instruction.mode == am_IMP) {
             A = M & 0xFF;
         } else {
             bus->write_u8(M & 0xFF, addr);
@@ -296,13 +299,13 @@ void Cpu::execute_instruction(u16 addr) {
         break;
     }
     case op_LSR: {
-        u8 M = instruction->mode == am_IMP ? A : bus->read_u8(addr);
+        u8 M = instruction.mode == am_IMP ? A : bus->read_u8(addr);
 
         set_C_status((M & 0x01) != 0);
         M >>= 1;
         set_ZN_status(M);
 
-        if (instruction->mode == am_IMP) {
+        if (instruction.mode == am_IMP) {
             A = M;
         } else {
             bus->write_u8(M, addr);
@@ -342,7 +345,7 @@ void Cpu::execute_instruction(u16 addr) {
         break;
     }
     case op_ROL: {
-        u8 M = instruction->mode == am_IMP ? A : bus->read_u8(addr);
+        u8 M = instruction.mode == am_IMP ? A : bus->read_u8(addr);
 
         u8 rotated = M << 1;
         rotated |= ((P & C) != 0) ? 1 : 0;
@@ -350,7 +353,7 @@ void Cpu::execute_instruction(u16 addr) {
         set_C_status((M & 0x80) != 0);
         set_ZN_status(rotated);
 
-        if (instruction->mode == am_IMP) {
+        if (instruction.mode == am_IMP) {
             A = rotated;
         } else {
             bus->write_u8(rotated, addr);
@@ -358,7 +361,7 @@ void Cpu::execute_instruction(u16 addr) {
         break;
     }
     case op_ROR: {
-        u8 M = instruction->mode == am_IMP ? A : bus->read_u8(addr);
+        u8 M = instruction.mode == am_IMP ? A : bus->read_u8(addr);
 
         u8 rotated = M >> 1;
         rotated |= ((P & C) != 0) ? 0x80 : 0;
@@ -366,7 +369,7 @@ void Cpu::execute_instruction(u16 addr) {
         set_C_status((M & 1) != 0);
         set_ZN_status(rotated);
 
-        if (instruction->mode == am_IMP) {
+        if (instruction.mode == am_IMP) {
             A = rotated;
         } else {
             bus->write_u8(rotated, addr);
@@ -459,12 +462,14 @@ void Cpu::execute_instruction(u16 addr) {
         break;
     }
     }
+
+    cyclesExecuted += cyclesExecuted;
 }
 
-u16 Cpu::get_operand_address(AddressingMode mode) {
+u16 Cpu::get_operand_address() {
     u16 address;
 
-    switch (mode) {
+    switch (instruction.mode) {
     case am_ABS: {
         address = bus->read_u16(PC);
         PC += 2; // 2 bytes read
@@ -473,7 +478,7 @@ u16 Cpu::get_operand_address(AddressingMode mode) {
     case am_ABX: {
         address = bus->read_u16(PC);
 
-        switch (instruction->op) {
+        switch (instruction.op) {
         case op_ASL: case op_DEC: case op_INC: case op_LSR: case op_ROL: case op_ROR: case op_STA:
             // no change occurs to cycle times
             break;
@@ -489,7 +494,7 @@ u16 Cpu::get_operand_address(AddressingMode mode) {
     case am_ABY: {
         address = bus->read_u16(PC);
 
-        switch (instruction->op) {
+        switch (instruction.op) {
         case op_STA:
             // no change occurs to cycle times
             break;
@@ -541,7 +546,7 @@ u16 Cpu::get_operand_address(AddressingMode mode) {
 
         address = (hi << 8) | lo;
 
-        switch (instruction->op) {
+        switch (instruction.op) {
         case op_STA:
             // no change occurs to cycle times
             break;
@@ -626,9 +631,38 @@ void Cpu::branch_to(u16 address) {
     PC = address;
 }
 
+//
+
 void Cpu::handle_page_break(u16 a1, u16 a2) {
     // if two addresses have different hi-bytes, they are in different pages, i.e. page break.
     if ((a1 & 0xFF00) != (a2 & 0xFF00)) {
         cyclesRemaining++;
     }
+}
+
+//
+
+std::vector<std::string> Cpu::registers_to_strings() const {
+    return {
+        fmt::format("A  = 0x{:02x}", A),  fmt::format("X  = 0x{:02x}", X),
+        fmt::format("Y  = 0x{:02x}", Y),  fmt::format("P  = 0x{:02x}", P),
+        fmt::format("SP = 0x{:02x}", SP), fmt::format("PC = 0x{:04x}", PC),
+    };
+}
+
+static constexpr const char *STRING_LOOKUP[57] = {
+    "ADC", "AND", "ASL", "BCC", "BCS", "BEQ", "BIT", "BMI", "BNE", "BPL", "BRK", "BVC",
+    "BVS", "CLC", "CLD", "CLI", "CLV", "CMP", "CPX", "CPY", "DEC", "DEX", "DEY", "EOR",
+    "INC", "INX", "INY", "JMP", "JSR", "LDA", "LDX", "LDY", "LSR", "NOP", "ORA", "PHA",
+    "PHP", "PLA", "PLP", "ROL", "ROR", "RTI", "RTS", "SBC", "SEC", "SED", "SEI", "STA",
+    "STX", "STY", "TAX", "TAY", "TSX", "TXA", "TXS", "TYA", "XXX",
+};
+
+static constexpr const char *ADDRMODE_LOOKUP[] = {
+    "ABS", "ABX", "ABY", "IMM", "IMP", "IND", "INX", "INY", "REL", "ZP0", "ZPX", "ZPY",
+};
+
+std::string Cpu::get_executing_instruction() {
+    return fmt::format("{} ({}) [ 0x{:04x} ]", STRING_LOOKUP[instruction.op],
+                       ADDRMODE_LOOKUP[instruction.mode], instruction.address);
 }

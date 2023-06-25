@@ -1,10 +1,11 @@
 #pragma once
 
+#include <string>
+#include <vector>
+
 #include "common/types.hpp"
 #include "nes/instructions.hpp"
 #include "nes/memory.hpp"
-
-#include <vector>
 
 namespace nes {
 
@@ -29,7 +30,10 @@ public:
     /// non-maskable interrupt
     void nmi();
 
-private:
+    /// Emulate the clock cycle of the CPU
+    void clock();
+
+public:
     u8  A  = 0; // Accumulator Register, A
     u8  X  = 0; // Index Register, X
     u8  Y  = 0; // Index Register, Y
@@ -39,7 +43,7 @@ private:
 
     Bus *bus = nullptr; // the bus, interface for communication
 
-    const Instruction *instruction = nullptr; // currently executing instruction
+    Instruction instruction; // currently executing instruction
 
     u8 cyclesRemaining = 0; // remaining number of cycles to simulate
 
@@ -72,16 +76,19 @@ private:
     void set_ZN_status(u8 num);
 
 private:
-    /// fetch instruction from memory and decode it
-    void decode_instruction();
+    /// fetch the operand address for the instruction
+    u16 get_operand_address();
 
-    u16 get_operand_address(AddressingMode mode);
-
-    void execute_instruction(u16 operandAddr);
+    void execute_instruction();
 
     void branch_to(u16 address);
 
     void handle_page_break(u16 a1, u16 a2);
+
+public:
+    std::vector<std::string> registers_to_strings() const;
+
+    std::string get_executing_instruction();
 };
 
 } // namespace nes
