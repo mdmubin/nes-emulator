@@ -17,6 +17,19 @@ set(
     "${CMAKE_SOURCE_DIR}/source/nes/bus.cpp"
 )
 
+include(FetchContent)
+
+# fix some timestamp warnings...
+cmake_policy(SET CMP0135 NEW)
+
+# fmt
+FetchContent_Declare(fmt URL "https://github.com/fmtlib/fmt/releases/download/10.0.0/fmt-10.0.0.zip")
+FetchContent_MakeAvailable(fmt)
+
+# raylib
+FetchContent_Declare(raylib URL "https://github.com/raysan5/raylib/archive/refs/tags/4.5.0.zip")
+FetchContent_MakeAvailable(raylib)
+
 # setup link directory
 link_directories("${CMAKE_SOURCE_DIR}/external/libs")
 
@@ -25,8 +38,15 @@ add_executable(${PROJECT_NAME} ${project_source_files})
 
 # include directory
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/include/")
-target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/external/include/")
 
 # link libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE WinMM)
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
+target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
+
+# copy assets to binary directory
+add_custom_command(
+    TARGET ${PROJECT_NAME}
+    POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${PROJECT_SOURCE_DIR}/assets" $<TARGET_FILE_DIR:${PROJECT_NAME}>/assets
+)
