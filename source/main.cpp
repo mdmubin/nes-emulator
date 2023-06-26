@@ -1,13 +1,10 @@
-#include <raylib.h>
+#include "nes/system.hpp"
 
 int main() {
-    InitWindow(500, 500, "NES Emulator");
-
-    while (!WindowShouldClose())
-    {
-        BeginDrawing();
-            ClearBackground(BLACK);
-            DrawText("Hello Raylib!", 10, 10, 13, YELLOW);
-        EndDrawing();
-    }
+    nes::System system;
+    system.load_program({
+        0xA2, 0x0A, 0x8E, 0x00, 0x00, 0xA2, 0x03, 0x8E, 0x01, 0x00, 0xAC, 0x00, 0x00, 0xA9,
+        0x00, 0x18, 0x6D, 0x01, 0x00, 0x88, 0xD0, 0xFA, 0x8D, 0x02, 0x00, 0xEA, 0xEA, 0xEA,
+    });
+    system.run();
 }

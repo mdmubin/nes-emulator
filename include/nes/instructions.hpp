@@ -129,4 +129,16 @@ static const u64 CYCLE_COUNT_LOOKUP[256] = {
     /* 0xF */   2,   5,   0,   0,   0,   4,   6,   0,   2,   4,   0,   0,   0,   4,   7,   0,
 };
 
+static constexpr const char *INSTRUCTION_NAME_LOOKUP[57] = {
+    "ADC", "AND", "ASL", "BCC", "BCS", "BEQ", "BIT", "BMI", "BNE", "BPL", "BRK", "BVC",
+    "BVS", "CLC", "CLD", "CLI", "CLV", "CMP", "CPX", "CPY", "DEC", "DEX", "DEY", "EOR",
+    "INC", "INX", "INY", "JMP", "JSR", "LDA", "LDX", "LDY", "LSR", "NOP", "ORA", "PHA",
+    "PHP", "PLA", "PLP", "ROL", "ROR", "RTI", "RTS", "SBC", "SEC", "SED", "SEI", "STA",
+    "STX", "STY", "TAX", "TAY", "TSX", "TXA", "TXS", "TYA", "XXX",
+};
+
+static constexpr const char *ADDRMODE_NAME_LOOKUP[] = {
+    "ABS", "ABX", "ABY", "IMM", "IMP", "IND", "INX", "INY", "REL", "ZP0", "ZPX", "ZPY",
+};
+
 } // namespace nes

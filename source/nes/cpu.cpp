@@ -650,19 +650,7 @@ std::vector<std::string> Cpu::registers_to_strings() const {
     };
 }
 
-static constexpr const char *STRING_LOOKUP[57] = {
-    "ADC", "AND", "ASL", "BCC", "BCS", "BEQ", "BIT", "BMI", "BNE", "BPL", "BRK", "BVC",
-    "BVS", "CLC", "CLD", "CLI", "CLV", "CMP", "CPX", "CPY", "DEC", "DEX", "DEY", "EOR",
-    "INC", "INX", "INY", "JMP", "JSR", "LDA", "LDX", "LDY", "LSR", "NOP", "ORA", "PHA",
-    "PHP", "PLA", "PLP", "ROL", "ROR", "RTI", "RTS", "SBC", "SEC", "SED", "SEI", "STA",
-    "STX", "STY", "TAX", "TAY", "TSX", "TXA", "TXS", "TYA", "XXX",
-};
-
-static constexpr const char *ADDRMODE_LOOKUP[] = {
-    "ABS", "ABX", "ABY", "IMM", "IMP", "IND", "INX", "INY", "REL", "ZP0", "ZPX", "ZPY",
-};
-
 std::string Cpu::get_executing_instruction() {
-    return fmt::format("{} ({}) [ 0x{:04x} ]", STRING_LOOKUP[instruction.op],
-                       ADDRMODE_LOOKUP[instruction.mode], instruction.address);
+    return fmt::format("{}#{} [0x{:04x}]", INSTRUCTION_NAME_LOOKUP[instruction.op],
+                       ADDRMODE_NAME_LOOKUP[instruction.mode], instruction.address);
 }

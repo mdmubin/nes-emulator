@@ -11,10 +11,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(
     project_source_files
     # source files go here
-    "${CMAKE_SOURCE_DIR}/source/main.cpp"
-    "${CMAKE_SOURCE_DIR}/source/nes/cpu.cpp"
-    "${CMAKE_SOURCE_DIR}/source/nes/memory.cpp"
-    "${CMAKE_SOURCE_DIR}/source/nes/bus.cpp"
+    "source/main.cpp"
+    "source/nes/cpu.cpp"
+    "source/nes/memory.cpp"
+    "source/nes/bus.cpp"
+    "source/nes/system.cpp"
 )
 
 include(FetchContent)
