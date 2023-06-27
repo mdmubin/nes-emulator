@@ -38,7 +38,7 @@ System::~System() {
 
 void System::load_program(const std::vector<u8> &program) {
     mem.load_program(program);
-    mem.write_u16(0x0800, 0xFFFC);
+    mem.write_u16(0x8000, 0xFFFC);
     cpu.reset();
 }
 
