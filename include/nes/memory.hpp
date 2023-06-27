@@ -11,6 +11,8 @@ class Mem {
 public:
     Mem() = default;
 
+    static constexpr u64 MEM_SIZE_BYTES = 64 * 1024;
+
     /// clear the mem
     void reset();
 
@@ -29,7 +31,7 @@ public:
     void load_program(const std::vector<u8>& program);
 
 private:
-    std::array<u8, 0xFFFF> memory = {};
+    std::array<u8, MEM_SIZE_BYTES> memory = {};
 };
 
 } // namespace nes

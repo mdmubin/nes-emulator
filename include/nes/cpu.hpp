@@ -43,7 +43,7 @@ public:
 
     Bus *bus = nullptr; // the bus, interface for communication
 
-    Instruction instruction; // currently executing instruction
+    Instruction instruction = {op_XXX, am_IMP}; // currently executing instruction
 
     u8 cyclesRemaining = 0; // remaining number of cycles to simulate
 

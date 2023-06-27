@@ -116,19 +116,19 @@ void Cpu::execute_instruction() {
     }
     case op_BCC: {
         if ((P & C) == 0) {
-            branch_to(PC + addr);
+            branch_to(addr);
         }
         break;
     }
     case op_BCS: {
         if ((P & C) != 0) {
-            branch_to(PC + addr);
+            branch_to(addr);
         }
         break;
     }
     case op_BEQ: {
         if ((P & Z) != 0) {
-            branch_to(PC + addr);
+            branch_to(addr);
         }
         break;
     }
@@ -145,19 +145,19 @@ void Cpu::execute_instruction() {
     }
     case op_BMI: {
         if ((P & N) != 0) {
-            branch_to(PC + addr);
+            branch_to(addr);
         }
         break;
     }
     case op_BNE: {
         if ((P & Z) == 0) {
-            branch_to(PC + addr);
+            branch_to(addr);
         }
         break;
     }
     case op_BPL: {
         if ((P & N) == 0) {
-            branch_to(PC + addr);
+            branch_to(addr);
         }
         break;
     }
@@ -181,13 +181,13 @@ void Cpu::execute_instruction() {
     }
     case op_BVC: {
         if ((P & V) == 0) {
-            branch_to(PC + addr);
+            branch_to(addr);
         }
         break;
     }
     case op_BVS: {
         if ((P & V) != 0) {
-            branch_to(PC + addr);
+            branch_to(addr);
         }
         break;
     }
@@ -463,7 +463,7 @@ void Cpu::execute_instruction() {
     }
     }
 
-    cyclesExecuted += cyclesExecuted;
+    cyclesExecuted += cyclesRemaining;
 }
 
 u16 Cpu::get_operand_address() {
