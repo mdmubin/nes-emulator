@@ -9,7 +9,7 @@ using namespace nes;
 
 //
 
-#define STACK_START 0x0100
+static constexpr u16 STACK_START = 0x0100;
 
 //
 

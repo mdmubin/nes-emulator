@@ -20,10 +20,10 @@ public:
 
     void write_u16(u16 data, u16 address);
 
-    void attach_components(Cpu* cpu, Mem *m);
+    void attach_components(Cpu *cpu, Mem *m);
 
 private:
-    Mem * mem;
+    Mem *mem;
 };
 
 } // namespace nes
