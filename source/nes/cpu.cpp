@@ -25,6 +25,8 @@ void Cpu::reset() {
     SP = 0xFD;
     PC = bus->read_u16(0xFFFC);
 
+    instruction = {op_XXX, am_IMP};
+
     cyclesRemaining = 8;
 }
 
