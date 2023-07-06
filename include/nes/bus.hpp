@@ -2,6 +2,7 @@
 
 #include "common/types.hpp"
 #include "nes/cpu.hpp"
+#include "nes/rom.hpp"
 #include "nes/memory.hpp"
 
 #include <array>
@@ -20,10 +21,11 @@ public:
 
     void write_u16(u16 data, u16 address);
 
-    void attach_components(Cpu *cpu, Mem *m);
+    void attach_components(Cpu *cpu, Mem *m, Rom *rom);
 
 private:
     Mem *mem;
+    Rom *rom;
 };
 
 } // namespace nes

@@ -16,6 +16,7 @@ set(
     "source/nes/memory.cpp"
     "source/nes/bus.cpp"
     "source/nes/system.cpp"
+    "source/nes/rom.cpp"
 )
 
 include(FetchContent)

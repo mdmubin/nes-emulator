@@ -11,7 +11,8 @@ class Mem {
 public:
     Mem() = default;
 
-    static constexpr u64 MEM_SIZE_BYTES = 64 * 1024;
+    /// NES RAM size
+    static constexpr u64 MEM_SIZE_BYTES = 2048;
 
     /// clear the mem
     void reset();
