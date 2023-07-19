@@ -28,7 +28,3 @@ void Mem::write_u16(u16 data, u16 address) {
     memory[address]     = lo;
     memory[address + 1] = hi;
 }
-
-void Mem::load_program(const std::vector<u8> &program) {
-    std::copy(program.begin(), program.end(), memory.begin() + 0x8000);
-}

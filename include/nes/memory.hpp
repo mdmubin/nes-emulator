@@ -29,8 +29,6 @@ public:
     /// write two bytes to mem at the given address
     void write_u16(u16 data, u16 address);
 
-    void load_program(const std::vector<u8>& program);
-
 private:
     std::array<u8, MEM_SIZE_BYTES> memory = {};
 };
