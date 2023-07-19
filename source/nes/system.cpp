@@ -31,15 +31,19 @@ System::System() : bus(), cpu(), mem() {
 }
 
 System::~System() {
+    delete rom;
     CloseWindow();
 }
 
 //
 
-void System::load_program(const std::vector<u8> &program) {
-    mem.load_program(program);
+void System::load_rom(const std::string &filepath) {
+    // NOTE: ensure no previous Rom exists, if I add Rom loading allowed during runtime
+    rom = new Rom(filepath.c_str());
+
     mem.write_u8(0x00, 0xFFFC);
     mem.write_u8(0x80, 0xFFFD);
+
     cpu.reset();
 }
 

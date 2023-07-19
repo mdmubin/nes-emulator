@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <string>
 
 #include "nes/bus.hpp"
 #include "nes/cpu.hpp"
@@ -15,12 +15,13 @@ public:
 
     void run();
 
-    void load_program(const std::vector<u8>& program);
+    void load_rom(const std::string& filepath);
 
 private:
     Bus bus;
     Cpu cpu;
     Mem mem;
+    Rom *rom = nullptr;
 
     void draw();
 
