@@ -21,11 +21,13 @@ public:
 
     void write_u16(u16 data, u16 address);
 
-    void attach_components(Cpu *cpu, Mem *m, Rom *rom);
+    void attach_components(Cpu *cpu, Mem *m);
+
+    void attach_rom(Rom* rom);
 
 private:
-    Mem *mem;
-    Rom *rom;
+    Mem *mem = nullptr;
+    Rom *rom = nullptr;
 };
 
 } // namespace nes

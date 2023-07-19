@@ -4,14 +4,15 @@ using namespace nes;
 using namespace std;
 
 u8 Bus::read_u8(u16 address) {
+    u16 mirroredAddr;
     if (address >= 0x0000 && address <= 0x1FFF) {
-        return mem->read_u8(address & 0x07FF);
+        mirroredAddr = address & 0x07FF;
+        return mem->read_u8(mirroredAddr);
     } else if (address >= 0x2000 && address <= 0x3FFF) {
+        mirroredAddr = address & 0x2007;
         // PPU registers, not implemented yet
-    } else if (address >= 0x4000 && address <= 0x4017) {
-        // APU and I/O registers, not implemented yet
-    } else if (address >= 0x4018 && address <= 0x401F) {
-        // APU and I/O functionality, normally disabled
+    } else if (address >= 0x4000 && address <=  0x401F) {
+        // APU and I/O functionality
     } else if (address >= 4020 && address <= 0xFFFF) {
         // Rom space(PRG ROM, PRG RAM), not implemented yet
     }
@@ -25,14 +26,14 @@ u16 Bus::read_u16(u16 address) {
 }
 
 void Bus::write_u8(u8 data, u16 address) {
+    u16 mirroredAddr;
     if (address >= 0x0000 && address <= 0x1FFF) {
-        mem->write_u8(data, address & 0x07FF);
+        mirroredAddr = address & 0x07FF;
+        mem->write_u8(data, mirroredAddr);
     } else if (address >= 0x2000 && address <= 0x3FFF) {
         // PPU registers, not implemented yet
-    } else if (address >= 0x4000 && address <= 0x4017) {
-        // APU and I/O registers, not implemented yet
-    } else if (address >= 0x4018 && address <= 0x401F) {
-        // APU and I/O functionality, normally disabled
+    } else if (address >= 0x4000 && address <= 0x401F) {
+        // APU and I/O functionality
     } else if (address >= 4020 && address <= 0xFFFF) {
         // Rom space(PRG ROM, PRG RAM), not implemented yet
     }
@@ -47,9 +48,12 @@ void Bus::write_u16(u16 data, u16 address) {
 
 //
 
-void Bus::attach_components(Cpu *c, Mem *m, Rom *r) {
+void Bus::attach_components(Cpu *c, Mem *m) {
     mem = m;
-    rom = r;
     c->connect_bus(this);
     m->reset();
+}
+
+void Bus::attach_rom(Rom *r) {
+    rom = r;
 }
